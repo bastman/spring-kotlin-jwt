@@ -1,9 +1,9 @@
 {
-  "https://example.com/claims/userid": "USERID-FAKE",
-  "https://example.com/claims/given_name": "Bat",
-  "https://example.com/claims/family_name": "Man",
-  "https://example.com/claims/email": "bat.man@example.com",
-  "https://awesome-app.example.com/claims/roles": [
+  "https://example-company.com/claims/userid": "USERID-FAKE",
+  "https://example-company.com/claims/given_name": "Bat",
+  "https://example-company.com/claims/family_name": "Man",
+  "https://example-company.com/claims/email": "bat.man@example-company.com",
+  "https://awesome-app.example-company.com/claims/roles": [
     "example-role-A",
     "example-role-B"
   ],

@@ -1,7 +1,11 @@
 app:
   serviceName: "spring-kotlin-jwt-service"
   environmentName: "INVALID_ENV_NAME"
-
+  auth:
+    strategy: AUTH0
+    auth0:
+      issuer: https://example-company.eu.auth0.com/
+      apiAudience: https://awesome-app.example-company.com/api/
 ---
 spring:
   profiles:
