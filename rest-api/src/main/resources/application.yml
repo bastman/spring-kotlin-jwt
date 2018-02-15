@@ -1,0 +1,9 @@
+app:
+  serviceName: "spring-kotlin-jwt-service"
+  environmentName: "INVALID_ENV_NAME"
+
+---
+spring:
+  profiles:
+    active: local
+---
