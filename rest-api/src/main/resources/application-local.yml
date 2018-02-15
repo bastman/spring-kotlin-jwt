@@ -1,2 +1,2 @@
 app.environmentName: local
-
+app.auth.strategy: JWT_FAKE
