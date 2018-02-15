@@ -8,7 +8,7 @@ import org.springframework.context.ApplicationListener
 
 
 @SpringBootApplication
-class RestApiApplication(private val apiConfig: ApiConfig): ApplicationListener<ApplicationReadyEvent> {
+class RestApiApplication(private val apiConfig: ApiConfig) : ApplicationListener<ApplicationReadyEvent> {
 
     override fun onApplicationEvent(contextRefreshedEvent: ApplicationReadyEvent) {
         logger.info("=== STARTED SPRING BOOT APP: service=${apiConfig.serviceName} env=${apiConfig.environmentName} ===")
