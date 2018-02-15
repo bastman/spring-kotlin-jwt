@@ -1,6 +1,9 @@
 package com.example.config.auth.auth0
 
-import com.auth0.spring.security.api.JwtWebSecurityConfigurer
+import com.auth0.jwt.interfaces.DecodedJWT
+import com.example.config.auth.roles
+import com.example.util.auth0.CustomJwtWebSecurityConfigurer
+import com.example.util.auth0.scopes
 import mu.KLogging
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.http.HttpMethod
@@ -16,16 +19,17 @@ class Auth0WebSecurity(
 ) {
 
     fun configureHttpSecurity(http: HttpSecurity) {
-        JwtWebSecurityConfigurer
-                .forRS256(
-                        apiAudience, issuer
-                )
+        CustomJwtWebSecurityConfigurer
+                .forRS256(audience = apiAudience, issuer = issuer)
+                .copy(authoritiesConverter = { authoritiesFromJwtDecoded(it) })
                 .configure(http)
                 .authorizeRequests()
                 .antMatchers(HttpMethod.GET, "/ping").authenticated()
                 .anyRequest().authenticated()
         logger.info { "configured web-security. (apiAudience=$apiAudience issuer=$issuer" }
     }
+
+    private fun authoritiesFromJwtDecoded(it: DecodedJWT) = it.roles() + it.scopes()
 
     companion object : KLogging()
 }
