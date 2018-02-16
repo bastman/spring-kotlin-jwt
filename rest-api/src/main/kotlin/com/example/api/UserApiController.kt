@@ -10,7 +10,9 @@ import org.springframework.web.bind.annotation.RestController
 import java.time.Instant
 
 @RestController
-class ApiController(private val meHandler: MeHandler) {
+class UserApiController(
+        private val meHandler: MeHandler
+) {
 
     @GetMapping("/api/ping")
     fun ping(): PingResponse = PingResponse(now = Instant.now())
