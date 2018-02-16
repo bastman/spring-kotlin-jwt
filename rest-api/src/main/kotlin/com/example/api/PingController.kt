@@ -1,7 +1,9 @@
 package com.example.api
 
-import com.auth0.jwt.interfaces.DecodedJWT
-import com.example.config.auth.*
+import com.example.api.auth.ApiUser
+import com.example.api.auth.ApiUserDetails
+import com.example.api.auth.ApiUserService
+import com.example.config.auth.roles
 import com.example.util.auth0.CustomAuthenticationJsonWebToken
 import com.example.util.auth0.scopes
 import mu.KLogging
@@ -11,41 +13,42 @@ import org.springframework.web.bind.annotation.RestController
 import java.time.Instant
 
 @RestController
-class PingController {
+class PingController(private val apiUserService: ApiUserService) {
     @GetMapping("/api/ping")
     fun ping(authentication: Authentication?): PingResponse {
-        val me = when (authentication) {
-            is CustomAuthenticationJsonWebToken -> authentication.details.toMe()
-            else -> null
-        }
-
-        val authorities = if (authentication != null) {
-            authentication.authorities.map { it.toString() }
-        } else emptyList()
-
-        logger.info { "AUTH: $authentication" }
-
-        return PingResponse(now = Instant.now(), me = me, authorities = authorities)
+        val apiUser: ApiUser? = authentication.toApiUser(apiUserService)
+        logger.info { "auth=$authentication apiUser=$apiUser" }
+        return PingResponse(
+                now = Instant.now(),
+                user = apiUser?.userDetails,
+                auth = ApiUserAuthDto(
+                        authorities = apiUser?.authorities ?: emptyList(),
+                        scopes = authentication.scopes(),
+                        roles = authentication.roles()
+                )
+        )
     }
 
     companion object : KLogging()
 }
 
-data class PingResponse(val now: Instant, val me: Me?, val authorities: List<String>)
-data class Me(
-        val userId: String,
-        val email: String,
-        val givenName: String,
-        val familyName: String,
-        val roles: List<String>,
-        val scopes: List<String>
-)
+data class PingResponse(val now: Instant, val user: ApiUserDetails?, val auth: ApiUserAuthDto)
+data class ApiUserAuthDto(val authorities: List<String>, val roles: List<String>, val scopes: List<String>)
 
-private fun DecodedJWT.toMe() = Me(
-        userId = userId() ?: "",
-        email = email() ?: "",
-        givenName = givenName() ?: "",
-        familyName = familyName() ?: "",
-        roles = roles(),
-        scopes = scopes()
-)
+private fun Authentication?.toApiUser(apiUserService: ApiUserService): ApiUser? =
+        when (this) {
+            is CustomAuthenticationJsonWebToken -> apiUserService.apiUserFromAuthentication(this)
+            else -> null
+        }
+
+private fun Authentication?.roles(): List<String> =
+        when (this) {
+            is CustomAuthenticationJsonWebToken -> details.roles()
+            else -> emptyList()
+        }
+
+private fun Authentication?.scopes(): List<String> =
+        when (this) {
+            is CustomAuthenticationJsonWebToken -> details.scopes()
+            else -> emptyList()
+        }
