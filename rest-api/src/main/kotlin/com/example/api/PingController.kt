@@ -15,16 +15,7 @@ class PingController {
     @GetMapping("/api/ping")
     fun ping(authentication: Authentication?): PingResponse {
         val me = when (authentication) {
-            is CustomAuthenticationJsonWebToken -> {
-                Me(
-                        userId = authentication.details.userId() ?: "",
-                        email = authentication.details.email() ?: "",
-                        givenName = authentication.details.givenName() ?: "",
-                        familyName = authentication.details.familyName() ?: "",
-                        roles = authentication.details.roles(),
-                        scopes = authentication.details.scopes()
-                )
-            }
+            is CustomAuthenticationJsonWebToken -> authentication.details.toMe()
             else -> null
         }
 
