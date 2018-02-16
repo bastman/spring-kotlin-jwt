@@ -14,17 +14,19 @@ import java.time.Instant
 
 @RestController
 class PingController(private val apiUserService: ApiUserService) {
+
     @GetMapping("/api/ping")
     fun ping(authentication: Authentication?): PingResponse {
-        val apiUser: ApiUser? = authentication.toApiUser(apiUserService)
+        val apiUser: ApiUser? = authentication?.toApiUser(apiUserService)
         logger.info { "auth=$authentication apiUser=$apiUser" }
+
         return PingResponse(
                 now = Instant.now(),
                 user = apiUser?.userDetails,
                 auth = ApiUserAuthDto(
                         authorities = apiUser?.authorities ?: emptyList(),
-                        scopes = authentication.scopes(),
-                        roles = authentication.roles()
+                        scopes = authentication?.scopes() ?: emptyList(),
+                        roles = authentication?.roles() ?: emptyList()
                 )
         )
     }
@@ -35,19 +37,16 @@ class PingController(private val apiUserService: ApiUserService) {
 data class PingResponse(val now: Instant, val user: ApiUserDetails?, val auth: ApiUserAuthDto)
 data class ApiUserAuthDto(val authorities: List<String>, val roles: List<String>, val scopes: List<String>)
 
-private fun Authentication?.toApiUser(apiUserService: ApiUserService): ApiUser? =
-        when (this) {
-            is CustomAuthenticationJsonWebToken -> apiUserService.apiUserFromAuthentication(this)
-            else -> null
-        }
+private fun Authentication.toApiUser(apiUserService: ApiUserService): ApiUser =
+        apiUserService.apiUserFromAuthentication(this)
 
-private fun Authentication?.roles(): List<String> =
+private fun Authentication.roles(): List<String> =
         when (this) {
             is CustomAuthenticationJsonWebToken -> details.roles()
             else -> emptyList()
         }
 
-private fun Authentication?.scopes(): List<String> =
+private fun Authentication.scopes(): List<String> =
         when (this) {
             is CustomAuthenticationJsonWebToken -> details.scopes()
             else -> emptyList()
