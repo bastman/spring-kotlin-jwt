@@ -94,6 +94,7 @@ dependencies {
     testCompile('org.springframework.boot:spring-boot-starter-test') {
         exclude module: "junit"
     }
+    testCompile "org.springframework.security:spring-security-test:$springSecurityTestVersion"
     testCompile "org.junit.jupiter:junit-jupiter-api"
     testRuntime "org.junit.jupiter:junit-jupiter-engine"
     testCompile "org.amshove.kluent:kluent:$kluentVersion"
