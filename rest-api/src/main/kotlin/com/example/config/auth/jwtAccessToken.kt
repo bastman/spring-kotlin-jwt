@@ -8,6 +8,7 @@ import com.example.config.auth.JwtAccessTokenConfig.CLAIM_ROLES
 import com.example.config.auth.JwtAccessTokenConfig.CLAIM_USER_ID
 import com.example.util.auth0.claimAsListOfString
 import com.example.util.auth0.claimAsString
+import com.example.util.auth0.scopes
 
 object JwtAccessTokenConfig {
     const val CLAIM_ROLES = "https://awesome-app.example-company.com/claims/roles"
@@ -18,8 +19,9 @@ object JwtAccessTokenConfig {
     const val CLAIM_FAMILY_NAME = "https://example-company.com/claims/family_name"
 }
 
-fun DecodedJWT.userId() = this.claimAsString(CLAIM_USER_ID)
-fun DecodedJWT.email() = this.claimAsString(CLAIM_EMAIL)
-fun DecodedJWT.givenName() = this.claimAsString(CLAIM_GIVEN_NAME)
-fun DecodedJWT.familyName() = this.claimAsString(CLAIM_FAMILY_NAME)
-fun DecodedJWT.roles() = this.claimAsListOfString(CLAIM_ROLES)
+fun DecodedJWT.userId() = claimAsString(CLAIM_USER_ID)
+fun DecodedJWT.email() = claimAsString(CLAIM_EMAIL)
+fun DecodedJWT.givenName() = claimAsString(CLAIM_GIVEN_NAME)
+fun DecodedJWT.familyName() = claimAsString(CLAIM_FAMILY_NAME)
+fun DecodedJWT.roles() = claimAsListOfString(CLAIM_ROLES)
+fun DecodedJWT.authorities() = (scopes() + roles()).distinct()
