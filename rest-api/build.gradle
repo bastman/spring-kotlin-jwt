@@ -12,7 +12,7 @@ buildscript {
 
         // misc
         funktionaleVersion='1.2'
-        auth0Apiversion='1.0.0-rc.3'
+        auth0Apiversion='1.0.0'//'1.0.0-rc.3'
         jjwtVersion='0.9.0'
 
         // test
@@ -36,8 +36,7 @@ buildscript {
         // spring
         classpath "org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}"
         classpath "io.spring.gradle:dependency-management-plugin:${springGradlePluginVersion}"
-        // postgres
-        classpath "org.postgresql:postgresql:${postgresDriverVersion}"
+
         // test
         classpath "org.junit.platform:junit-platform-gradle-plugin:$junitGradlePluginVersion"
 
