@@ -1,18 +1,27 @@
 buildscript {
     ext {
-        kotlinVersion = '1.2.21'
-        kotlinLoggingVersion = '1.4.6'
-        logstashLogbackEncoderVersion='4.11'
-        jacksonVersion = '2.9.3'
-        springBootVersion = '2.0.0.RC1'
+        // kotlin
+        kotlinVersion = '1.2.30'
+        kotlinLoggingVersion = '1.5.3'
+        // spring
+        logstashLogbackEncoderVersion='5.0'//''4.8'
+        springBootVersion ='2.0.0.RELEASE'
+        springGradlePluginVersion = '1.0.4.RELEASE'
+        jacksonVersion = '2.9.4'
         swaggerVersion = '2.8.0'
+
+        // misc
         funktionaleVersion='1.2'
         auth0Apiversion='1.0.0-rc.3'
         jjwtVersion='0.9.0'
+
         // test
         springSecurityTestVersion='5.0.1.RELEASE'
-        kluentVersion = '1.34'
-        mockkVersion = '1.7.1'
+
+        junitGradlePluginVersion = '1.1.0'
+        mockitoVersion = '2.15.0'
+        kluentVersion = '1.35'
+        mockkVersion = '1.7.9'
     }
     repositories {
         mavenCentral()
@@ -20,13 +29,18 @@ buildscript {
         maven { url "https://repo.spring.io/milestone" }
     }
     dependencies {
-        classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:${kotlinVersion}")
-        classpath("org.jetbrains.kotlin:kotlin-allopen:${kotlinVersion}")
-        classpath("org.jetbrains.kotlin:kotlin-noarg:${kotlinVersion}")
+        // kotlin
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:${kotlinVersion}"
+        classpath "org.jetbrains.kotlin:kotlin-allopen:${kotlinVersion}"
+        classpath "org.jetbrains.kotlin:kotlin-noarg:${kotlinVersion}"
+        // spring
+        classpath "org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}"
+        classpath "io.spring.gradle:dependency-management-plugin:${springGradlePluginVersion}"
+        // postgres
+        classpath "org.postgresql:postgresql:${postgresDriverVersion}"
+        // test
+        classpath "org.junit.platform:junit-platform-gradle-plugin:$junitGradlePluginVersion"
 
-        classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
-        classpath("io.spring.gradle:dependency-management-plugin:1.0.4.RELEASE")
-        classpath("org.junit.platform:junit-platform-gradle-plugin:1.0.3")
     }
 }
 
@@ -37,12 +51,6 @@ apply plugin: 'org.springframework.boot'
 apply plugin: 'io.spring.dependency-management'
 apply plugin: 'org.junit.platform.gradle.plugin'
 apply plugin: 'idea'
-
-repositories {
-    mavenCentral()
-    jcenter()
-    maven { url "https://repo.spring.io/milestone" }
-}
 
 compileKotlin {
     kotlinOptions {
@@ -59,6 +67,12 @@ compileTestKotlin {
         languageVersion="1.2"
         freeCompilerArgs = ["-Xjsr305=strict"]
     }
+}
+
+repositories {
+    mavenCentral()
+    jcenter()
+    maven { url "https://repo.spring.io/milestone" }
 }
 
 dependencies {
